@@ -4,7 +4,7 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/eaglesakura/swagger-go-core/interface"
-	"github.com/eaglesakura/swagger-go-core/util"
+	"github.com/eaglesakura/swagger-go-core/utils"
 )
 
 func Test_MethodMapper_PutHandler(t *testing.T) {
