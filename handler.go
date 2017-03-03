@@ -33,5 +33,5 @@ type HandleMapper interface {
 	/**
 	 * 最終的なハンドリングを行なうためのRouterを生成する
 	 */
-	NewRouter(controller ContextFactory) *mux.Router
+	NewRouter(factory ContextFactory) *mux.Router
 }

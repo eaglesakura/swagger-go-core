@@ -1,5 +1,8 @@
 package swagger
 
+/**
+ * 入力されたパラメータのバリデーションを行なうインターフェース
+ */
 type ParameterValidator interface {
 	Required(set bool) ParameterValidator
 

@@ -16,7 +16,7 @@ type RequestContext interface {
 	 *
 	 * Contextをチェックし、適したValidatorを生成させる。
 	 *
-	 * ex) swagger.NewValidator()
+	 * ex) swagger.NewValidatorFactory()
 	 */
 	NewValidatorFactory() ValidatorFactory
 
@@ -47,4 +47,3 @@ type ContextFactory interface {
 	 */
 	NewContext(request *http.Request) RequestContext
 }
-

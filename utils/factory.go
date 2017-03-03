@@ -14,7 +14,17 @@ import (
  * 現時点ではworkaroundとして、isNilをコード生成で賄う。
  */
 func NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
-	return &swagger_internal.ValidatorImpl{Value:value, IsNil:isNil}
+	return &swagger_internal.ParameterValidatorImpl{Value:value, IsNil:isNil}
+}
+
+/**
+ * デフォルトのValidatorを生成する
+ *
+ * nil値を直接interface{}に変換した場合、==nilチェックが行えない仕様上の問題がある。
+ * 現時点ではworkaroundとして、isNilをコード生成で賄う。
+ */
+func NewValidatorFactory() swagger.ValidatorFactory {
+	return &swagger_internal.ParameterValidatorFactoryImpl{}
 }
 
 /**

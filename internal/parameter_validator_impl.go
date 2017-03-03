@@ -5,9 +5,8 @@ import (
 	"github.com/eaglesakura/swagger-go-core"
 )
 
-type FileContent string
 
-type ValidatorImpl struct {
+type ParameterValidatorImpl struct {
 	Value     interface{}
 	IsNil     bool
 
@@ -17,12 +16,12 @@ type ValidatorImpl struct {
 	maxLength *int
 }
 
-func (it *ValidatorImpl)Required(set bool) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl)Required(set bool) swagger.ParameterValidator {
 	it.required = &set
 	return it
 }
 
-func (it *ValidatorImpl)Pattern(pattern string) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl)Pattern(pattern string) swagger.ParameterValidator {
 	pattern = (pattern[1:len(pattern) - 2])
 
 	exp, err := regexp.Compile(pattern)
@@ -32,17 +31,17 @@ func (it *ValidatorImpl)Pattern(pattern string) swagger.ParameterValidator {
 	return it
 }
 
-func (it *ValidatorImpl)MinLength(len int) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl)MinLength(len int) swagger.ParameterValidator {
 	it.minLength = &len
 	return it
 }
 
-func (it *ValidatorImpl)MaxLength(len int) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl)MaxLength(len int) swagger.ParameterValidator {
 	it.maxLength = &len
 	return it
 }
 
-func (it ValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
+func (it ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
 	if it.IsNil && it.required != nil && *it.required {
 		return false
 	}

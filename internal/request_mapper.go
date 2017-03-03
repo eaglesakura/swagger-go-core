@@ -39,7 +39,7 @@ func (it *HandleMapperImpl)NewRouter(controller swagger.ContextFactory) *mux.Rou
 		for _, handle := range mapping.handlers {
 			router.HandleFunc(mapping.Path, func(write http.ResponseWriter, request *http.Request) {
 				context := controller.NewContext(request)
-				resp := handle.HandlerFunc(controller, context, request)
+				resp := handle.HandlerFunc(context, request)
 				context.Done(write, resp)
 			}).Methods(handle.Method)
 		}
