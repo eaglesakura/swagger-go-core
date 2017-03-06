@@ -5,15 +5,15 @@ import (
 	"github.com/eaglesakura/swagger-go-core"
 )
 
-
 type ParameterValidatorImpl struct {
-	Value     interface{}
-	IsNil     bool
+	Value       interface{}
+	IsNil       bool
 
-	pattern   *regexp.Regexp
-	required  *bool
-	minLength *int
-	maxLength *int
+	pattern     *regexp.Regexp
+	enumPattern *[]string
+	required    *bool
+	minLength   *int
+	maxLength   *int
 }
 
 func (it *ParameterValidatorImpl)Required(set bool) swagger.ParameterValidator {
@@ -41,14 +41,26 @@ func (it *ParameterValidatorImpl)MaxLength(len int) swagger.ParameterValidator {
 	return it
 }
 
-func (it ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
-	if it.IsNil && it.required != nil && *it.required {
-		return false
-	}
+/**
+ * valuesに指定したいずれかの値に合致する必要がある
+ */
+func (it *ParameterValidatorImpl)EnumPattern(values []string) swagger.ParameterValidator {
+	it.enumPattern = &values
+	return it
+}
 
-	// nil && not required
-	if it.IsNil && (it.required == nil || !(*it.required)) {
-		return true
+func (it ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
+
+	if it.IsNil {
+		// nilチェック
+		if it.required != nil && *it.required {
+			return false
+		}
+
+		// 必須でないならばこれ以上のチェックは必要ない
+		if (it.required == nil || !(*it.required)) {
+			return true
+		}
 	}
 
 	if strValue, ok := it.Value.(*string); strValue != nil && ok {
@@ -62,6 +74,22 @@ func (it ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
 
 		if it.pattern != nil && !it.pattern.Match([]byte(*strValue)) {
 			return false
+		}
+
+		// enum一致をチェックする
+		if it.enumPattern != nil {
+			validEnum := false
+			for _, value := range *it.enumPattern {
+				//
+				if value == (*strValue) {
+					validEnum = true
+				}
+			}
+
+			// enumに一致しないのでNG
+			if !validEnum {
+				return false
+			}
 		}
 	} else {
 		if validatable, ok := it.Value.(swagger.Validatable); validatable != nil && ok {
