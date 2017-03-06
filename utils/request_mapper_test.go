@@ -5,11 +5,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/eaglesakura/swagger-go-core"
 	swagger_internal "github.com/eaglesakura/swagger-go-core/internal"
-	swagger_utils "github.com/eaglesakura/swagger-go-core/utils"
 )
 
 func Test_MethodMapper_PutHandler(t *testing.T) {
-	mapper, _ := swagger_utils.NewHandlerMapper().(*swagger_internal.HandleMapperImpl)
+	mapper, _ := NewHandlerMapper().(*swagger_internal.HandleMapperImpl)
 	assert.NotNil(t, mapper)
 
 	mapper.PutHandler(swagger.HandleRequest{
