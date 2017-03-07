@@ -110,7 +110,7 @@ func (it *BasicRequestBinder)BindPath(key string, resultType string, result inte
 	}
 
 	value, ok := it.pathValues[key]
-	if !ok {
+	if !ok || len(value) == 0 {
 		return errors.New(http.StatusBadRequest, fmt.Sprintf("PathValue not found key[%v] path[%v]", key, it.Request.URL))
 	}
 
@@ -122,15 +122,22 @@ func (it *BasicRequestBinder)BindQuery(key string, resultType string, result int
 		it.queryValues = it.Request.URL.Query()
 	}
 
-	return stringToValue(it.queryValues.Get(key), resultType, result)
+	value := it.queryValues.Get(key)
+	if len(value) == 0 {
+		return errors.New(http.StatusBadRequest, fmt.Sprintf("QuryValue not found key[%v] path[%v]", key, it.Request.URL))
+	}
+	return stringToValue(value, resultType, result)
 }
 
 func (it *BasicRequestBinder)BindHeader(key string, resultType string, result interface{}) error {
-	return stringToValue(it.Request.Header.Get(key), resultType, result)
+	value := it.Request.Header.Get(key)
+	if len(value) == 0 {
+		return errors.New(http.StatusBadRequest, fmt.Sprintf("HeaderValue not found key[%v] path[%v]", key, it.Request.URL))
+	}
+	return stringToValue(value, resultType, result)
 }
 
 func (it *BasicRequestBinder)BindForm(key string, resultType string, result interface{}) error {
-
 	if it.Request.Form == nil {
 		err := it.Request.ParseForm()
 		if err != nil {
@@ -138,7 +145,12 @@ func (it *BasicRequestBinder)BindForm(key string, resultType string, result inte
 		}
 	}
 
-	return stringToValue(it.Request.Form.Get(key), resultType, result)
+	value := it.Request.Form.Get(key)
+	if len(value) == 0 {
+		return errors.New(http.StatusBadRequest, fmt.Sprintf("FormValue not found key[%v] path[%v]", key, it.Request.URL))
+	}
+
+	return stringToValue(value, resultType, result)
 }
 
 func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) error {

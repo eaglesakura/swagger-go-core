@@ -49,7 +49,7 @@ func (it *ParameterValidatorImpl)EnumPattern(values []string) swagger.ParameterV
 	return it
 }
 
-func (it ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
+func (it *ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
 
 	if it.IsNil {
 		// nilチェック
