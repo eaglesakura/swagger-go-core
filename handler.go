@@ -2,7 +2,6 @@ package swagger
 
 import (
 	"net/http"
-	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +17,7 @@ type HandleRequest struct {
 
 	// Function
 	// DefaultApiController.
-	HandlerFunc func(context RequestContext, request *http.Request) middleware.Responder
+	HandlerFunc func(context RequestContext, request *http.Request) Responder
 }
 
 /**

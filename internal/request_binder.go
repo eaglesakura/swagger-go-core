@@ -2,12 +2,12 @@ package swagger
 
 import (
 	"net/http"
-	"github.com/go-openapi/errors"
-	"github.com/go-openapi/runtime"
 	"strconv"
 	"net/url"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/eaglesakura/swagger-go-core"
+	"github.com/eaglesakura/swagger-go-core/errors"
 )
 
 func stringToValue(value string, resultType string, result interface{}) error {
@@ -91,12 +91,12 @@ func stringToValue(value string, resultType string, result interface{}) error {
 
 type BasicRequestBinder struct {
 	Request         *http.Request
-	ConsumerFactory func(contentType string) runtime.Consumer
+	ConsumerFactory func(contentType string) swagger.Consumer
 	pathValues      map[string]string
 	queryValues     url.Values
 }
 
-func (it *BasicRequestBinder)GetConsumer(contentType string) runtime.Consumer {
+func (it *BasicRequestBinder)GetConsumer(contentType string) swagger.Consumer {
 	return it.ConsumerFactory(contentType)
 }
 

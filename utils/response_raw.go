@@ -2,7 +2,7 @@ package swagger
 
 import (
 	"net/http"
-	"github.com/go-openapi/runtime"
+	"github.com/eaglesakura/swagger-go-core"
 )
 
 type RawBufferResponse struct {
@@ -11,7 +11,7 @@ type RawBufferResponse struct {
 	Payload     []byte
 }
 
-func (it *RawBufferResponse) WriteResponse(w http.ResponseWriter, p runtime.Producer) {
+func (it *RawBufferResponse) WriteResponse(w http.ResponseWriter, p swagger.Producer) {
 	w.WriteHeader(it.StatusCode)
 	if it.ContentType != "" {
 		w.Header().Add("Content-Type", it.ContentType)

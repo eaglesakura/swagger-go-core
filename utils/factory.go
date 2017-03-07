@@ -4,7 +4,6 @@ import (
 	"github.com/eaglesakura/swagger-go-core"
 	swagger_internal "github.com/eaglesakura/swagger-go-core/internal"
 	"net/http"
-	"github.com/go-openapi/runtime"
 )
 
 /**
@@ -41,7 +40,7 @@ func NewHandlerMapper() swagger.HandleMapper {
  *
  * Consumerの取得はFunctionに任せられる。
  */
-func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) runtime.Consumer) swagger.RequestBinder {
+func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
 	return &swagger_internal.BasicRequestBinder{
 		Request:req,
 		ConsumerFactory:consumerFactory,

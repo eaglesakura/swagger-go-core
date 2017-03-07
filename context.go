@@ -2,7 +2,6 @@ package swagger
 
 import (
 	"net/http"
-	"github.com/go-openapi/runtime/middleware"
 )
 
 /**
@@ -30,7 +29,7 @@ type RequestContext interface {
 	/**
 	 * Request -> Parameterのバインド失敗時に呼び出される。
 	 */
-	NewBindErrorResponse(err error) middleware.Responder
+	NewBindErrorResponse(err error) Responder
 
 	/**
 	 * ハンドリングの完了処理を行う。
@@ -38,7 +37,7 @@ type RequestContext interface {
 	 * このメソッドは制御の最後にかならず呼び出される。
 	 * 必要に応じてリソースの開放処理を行う。
 	 */
-	Done(writer http.ResponseWriter, response middleware.Responder)
+	Done(writer http.ResponseWriter, response Responder)
 }
 
 type ContextFactory interface {
