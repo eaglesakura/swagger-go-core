@@ -1,5 +1,9 @@
 package swagger
 
+const (
+	BindExtra_Authentication = "Authentication"
+)
+
 type RequestBinder interface {
 	/**
 	 * URLからパラメータを取り出す
@@ -25,4 +29,13 @@ type RequestBinder interface {
 	 * Bodyからパラメータをパースする
 	 */
 	BindBody(resultType string, result interface{}) error
+
+	/**
+	 * その他の特殊データのバインディングを行う
+	 * このデータはバリデーションの対象外となるが、errorを返却した場合はその時点でbind失敗とみなす。
+	 *
+	 * 主に認証情報等で使用される
+	 * @param resultType BindExtra_Authentication
+	 */
+	BindExtra(resultType string, result interface{}) error
 }

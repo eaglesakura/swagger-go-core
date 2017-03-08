@@ -162,3 +162,12 @@ func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) err
 
 	return consumer.Consume(it.Request.Body, result)
 }
+
+
+
+/**
+ * その他の特殊データのバインディングを行う
+ */
+func (it *BasicRequestBinder)BindExtra(resultType string, result interface{}) error {
+	return nil
+}
