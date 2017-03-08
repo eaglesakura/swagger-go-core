@@ -22,9 +22,10 @@ type RequestContext interface {
 	/**
 	 * request -> parameterへのバインド制御インターフェースを生成する
 	 *
+	 * 認証等の事前チェックを行いたい場合はこの呼出前に行い、問題があればerrorを返却する
 	 * ex) swagger.NewRequestBinder()
 	 */
-	NewRequestBinder(request *http.Request) RequestBinder
+	NewRequestBinder(request *http.Request) (RequestBinder, error)
 
 	/**
 	 * Request -> Parameterのバインド失敗時に呼び出される。
