@@ -171,3 +171,13 @@ func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) err
 func (it *BasicRequestBinder)BindExtra(resultType string, result interface{}) error {
 	return nil
 }
+
+/**
+ * Validatorを生成する
+ */
+func (it *BasicRequestBinder)NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
+	return &ParameterValidatorImpl{
+		Value:value,
+		IsNil:isNil,
+	}
+}

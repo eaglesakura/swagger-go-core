@@ -11,15 +11,6 @@ import (
  */
 type RequestContext interface {
 	/**
-	 * Validatorを生成させる
-	 *
-	 * Contextをチェックし、適したValidatorを生成させる。
-	 *
-	 * ex) swagger.NewValidatorFactory()
-	 */
-	NewValidatorFactory() ValidatorFactory
-
-	/**
 	 * request -> parameterへのバインド制御インターフェースを生成する
 	 *
 	 * 認証等の事前チェックを行いたい場合はこの呼出前に行い、問題があればerrorを返却する

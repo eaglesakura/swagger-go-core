@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 	"github.com/eaglesakura/swagger-go-core"
+	"github.com/go-openapi/errors"
 )
 
 /**
@@ -32,15 +33,27 @@ type HandleMapperImpl struct {
  * Routerに登録する
  * GAE/Goの場合、 http.Handle("/path/to/api", router) でハンドリングが提供できる
  */
-func (it *HandleMapperImpl)NewRouter(controller swagger.ContextFactory) *mux.Router {
+func (it *HandleMapperImpl)NewRouter(factory swagger.ContextFactory) *mux.Router {
 	router := mux.NewRouter()
 
 	for _, mapping := range it.ListMethodMappers() {
 		for _, handle := range mapping.handlers {
 			router.HandleFunc(mapping.Path, func(write http.ResponseWriter, request *http.Request) {
-				context := controller.NewContext(request)
-				resp := handle.HandlerFunc(context, request)
-				context.Done(write, resp)
+				context := factory.NewContext(request)
+				var responder swagger.Responder
+				responderRef := &responder
+				defer func() {
+					// エラーからの復旧を行う
+					if err := recover(); err != nil && (*responderRef) == nil {
+						errorRef, ok := err.(error)
+						if !ok {
+							errorRef = errors.New(http.StatusInternalServerError, "Unknown Error")
+						}
+						*responderRef = context.NewBindErrorResponse(errorRef)
+					}
+					context.Done(write, *responderRef)
+				}()
+				responder = handle.HandlerFunc(context, request)
 			}).Methods(handle.Method)
 		}
 	}

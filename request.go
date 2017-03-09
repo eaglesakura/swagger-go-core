@@ -5,6 +5,8 @@ const (
 )
 
 type RequestBinder interface {
+	ValidatorFactory
+
 	/**
 	 * URLからパラメータを取り出す
 	 */
