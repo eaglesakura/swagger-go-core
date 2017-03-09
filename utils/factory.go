@@ -1,4 +1,4 @@
-package swagger
+package utils
 
 import (
 	"github.com/eaglesakura/swagger-go-core"
@@ -13,7 +13,7 @@ import (
  * 現時点ではworkaroundとして、isNilをコード生成で賄う。
  */
 func NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
-	return &swagger_internal.ParameterValidatorImpl{Value:value, IsNil:isNil}
+	return swagger_internal.NewValidator(value, isNil)
 }
 
 /**
@@ -23,16 +23,14 @@ func NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
  * 現時点ではworkaroundとして、isNilをコード生成で賄う。
  */
 func NewValidatorFactory() swagger.ValidatorFactory {
-	return &swagger_internal.ParameterValidatorFactoryImpl{}
+	return swagger_internal.NewValidatorFactory()
 }
 
 /**
  * デフォルトのMapperを生成する
  */
-func NewHandlerMapper() swagger.HandleMapper {
-	return &swagger_internal.HandleMapperImpl{
-		Mappers:map[string]*swagger_internal.MethodMapper{},
-	}
+func NewHandleMapper() swagger.HandleMapper {
+	return swagger_internal.NewHandleMapper()
 }
 
 /**
@@ -41,8 +39,5 @@ func NewHandlerMapper() swagger.HandleMapper {
  * Consumerの取得はFunctionに任せられる。
  */
 func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
-	return &swagger_internal.BasicRequestBinder{
-		Request:req,
-		ConsumerFactory:consumerFactory,
-	}
+	return swagger_internal.NewRequestBinder(req, consumerFactory)
 }

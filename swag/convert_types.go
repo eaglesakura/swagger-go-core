@@ -1,4 +1,4 @@
-package swag_port
+package swag
 
 import "time"
 

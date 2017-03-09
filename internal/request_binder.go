@@ -96,6 +96,13 @@ type BasicRequestBinder struct {
 	queryValues     url.Values
 }
 
+func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
+	return &BasicRequestBinder{
+		Request:req,
+		ConsumerFactory:consumerFactory,
+	}
+}
+
 func (it *BasicRequestBinder)GetConsumer(contentType string) swagger.Consumer {
 	return it.ConsumerFactory(contentType)
 }

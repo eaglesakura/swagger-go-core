@@ -27,7 +27,10 @@ type RequestContext interface {
 	 * ハンドリングの完了処理を行う。
 	 *
 	 * このメソッドは制御の最後にかならず呼び出される。
-	 * 必要に応じてリソースの開放処理を行う。
+	 * このメソッドでは基本的に response.WriteResponse(writer, {Producer})を呼び出す。
+	 * どのProducerが利用されるかは、Contextの実装者に任される。
+	 *
+	 * 必要に応じてリソースの開放処理を行う。aetestで生成されたContext等。
 	 */
 	Done(writer http.ResponseWriter, response Responder)
 }

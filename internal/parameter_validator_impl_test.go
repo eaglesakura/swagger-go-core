@@ -3,7 +3,7 @@ package swagger
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
-	swag "github.com/eaglesakura/swagger-go-core/swag-port"
+	"github.com/eaglesakura/swagger-go-core/swag"
 )
 
 func Test_ValidatorImpl_Valid(t *testing.T) {

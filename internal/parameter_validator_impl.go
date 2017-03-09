@@ -16,6 +16,10 @@ type ParameterValidatorImpl struct {
 	maxLength   *int
 }
 
+func NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
+	return &ParameterValidatorImpl{Value:value, IsNil:isNil}
+}
+
 func (it *ParameterValidatorImpl)Required(set bool) swagger.ParameterValidator {
 	it.required = &set
 	return it

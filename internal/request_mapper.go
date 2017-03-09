@@ -28,6 +28,14 @@ type HandleMapperImpl struct {
 	Mappers map[string]*MethodMapper
 }
 
+/**
+ * デフォルトのMapperを生成する
+ */
+func NewHandleMapper() swagger.HandleMapper {
+	return &HandleMapperImpl{
+		Mappers:map[string]*MethodMapper{},
+	}
+}
 
 /**
  * Routerに登録する

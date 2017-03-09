@@ -7,16 +7,24 @@ import (
 
 /**
  * APIエンドポイント(&METHOD) ごとに用意されるハンドリングデータ
+ * swagger-codegenにより自動生成される。
  */
 type HandleRequest struct {
-	// /path/to/api
+	/**
+	 * APIへのパスを設定する。
+	 * これはswagger.jsonの"{basePath}{apiPath}"で指定される。
+	 */
 	Path        string
 
-	// GET, POST, PUT...
+	/**
+	 * http methodを指定する。
+	 * GET, POST, PUT...
+	 */
 	Method      string
 
-	// Function
-	// DefaultApiController.
+	/**
+	 * ハンドリング用の関数を指定する。
+	 */
 	HandlerFunc func(context RequestContext, request *http.Request) Responder
 }
 
