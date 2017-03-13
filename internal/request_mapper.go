@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 	"github.com/eaglesakura/swagger-go-core"
-	"github.com/go-openapi/errors"
+	"github.com/eaglesakura/swagger-go-core/errors"
 )
 
 /**
