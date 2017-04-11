@@ -131,7 +131,8 @@ func (it *BasicRequestBinder)BindQuery(key string, resultType string, result int
 
 	value := it.queryValues.Get(key)
 	if len(value) == 0 {
-		return errors.New(http.StatusBadRequest, fmt.Sprintf("QuryValue not found key[%v] path[%v]", key, it.Request.URL))
+		//return errors.New(http.StatusBadRequest, fmt.Sprintf("QuryValue not found key[%v] path[%v]", key, it.Request.URL))
+		return nil
 	}
 	return stringToValue(value, resultType, result)
 }
@@ -139,7 +140,8 @@ func (it *BasicRequestBinder)BindQuery(key string, resultType string, result int
 func (it *BasicRequestBinder)BindHeader(key string, resultType string, result interface{}) error {
 	value := it.Request.Header.Get(key)
 	if len(value) == 0 {
-		return errors.New(http.StatusBadRequest, fmt.Sprintf("HeaderValue not found key[%v] path[%v]", key, it.Request.URL))
+		//return errors.New(http.StatusBadRequest, fmt.Sprintf("HeaderValue not found key[%v] path[%v]", key, it.Request.URL))
+		return nil
 	}
 	return stringToValue(value, resultType, result)
 }
@@ -154,7 +156,8 @@ func (it *BasicRequestBinder)BindForm(key string, resultType string, result inte
 
 	value := it.Request.Form.Get(key)
 	if len(value) == 0 {
-		return errors.New(http.StatusBadRequest, fmt.Sprintf("FormValue not found key[%v] path[%v]", key, it.Request.URL))
+		//return errors.New(http.StatusBadRequest, fmt.Sprintf("FormValue not found key[%v] path[%v]", key, it.Request.URL))
+		return nil
 	}
 
 	return stringToValue(value, resultType, result)
