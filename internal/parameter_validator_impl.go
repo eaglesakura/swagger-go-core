@@ -96,6 +96,15 @@ func (it *ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
 			}
 		}
 	} else {
+		if it.enumPattern != nil {
+			if validatable, ok := it.Value.(swagger.EnumValidatable); validatable != nil && ok {
+				// 事前指定されたEnumに一致しないのでNG
+				if !validatable.Valid(*it.enumPattern) {
+					return false
+				}
+			}
+		}
+
 		if validatable, ok := it.Value.(swagger.Validatable); validatable != nil && ok {
 			return validatable.Valid(factory)
 		}

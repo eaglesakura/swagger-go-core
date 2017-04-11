@@ -42,3 +42,7 @@ type ValidatorFactory interface {
 type Validatable interface {
 	Valid(factory ValidatorFactory) bool
 }
+
+type EnumValidatable interface {
+	Valid(pattern []string) bool
+}
