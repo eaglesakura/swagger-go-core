@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/eaglesakura/swagger-go-core"
 	"github.com/eaglesakura/swagger-go-core/errors"
+	"io/ioutil"
 )
 
 func stringToValue(value string, resultType string, result interface{}) error {
@@ -154,13 +155,31 @@ func (it *BasicRequestBinder)BindForm(key string, resultType string, result inte
 		}
 	}
 
-	value := it.Request.Form.Get(key)
-	if len(value) == 0 {
-		//return errors.New(http.StatusBadRequest, fmt.Sprintf("FormValue not found key[%v] path[%v]", key, it.Request.URL))
-		return nil
-	}
+	if resultType == "[]byte" {
+		file, _, err := it.Request.FormFile(key)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
 
-	return stringToValue(value, resultType, result)
+		if buf, err := ioutil.ReadAll(file); err != nil {
+			// リードに失敗した
+			return err
+		} else if (len(buf) > 0) {
+			// ファイルデータが存在する
+			ptr, _ := result.(**[]byte)
+			*ptr = &buf
+		}
+
+		return nil
+	} else {
+		value := it.Request.FormValue(key)
+		if len(value) == 0 {
+			//return errors.New(http.StatusBadRequest, fmt.Sprintf("FormValue not found key[%v] path[%v]", key, it.Request.URL))
+			return nil
+		}
+		return stringToValue(value, resultType, result)
+	}
 }
 
 func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) error {

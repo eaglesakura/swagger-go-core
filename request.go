@@ -1,9 +1,5 @@
 package swagger
 
-const (
-	BindExtra_Authentication = "Authentication"
-)
-
 type RequestBinder interface {
 	ValidatorFactory
 
