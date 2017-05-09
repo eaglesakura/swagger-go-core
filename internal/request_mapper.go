@@ -47,6 +47,10 @@ func (it *HandleMapperImpl)NewRouter(factory swagger.ContextFactory) *mux.Router
 	for _, mapping := range it.ListMethodMappers() {
 		for _, handle := range mapping.handlers {
 			router.HandleFunc(mapping.Path, func(write http.ResponseWriter, request *http.Request) {
+				if request.Method != handle.Method {
+					return
+				}
+
 				context := factory.NewContext(request)
 				var responder swagger.Responder
 				responderRef := &responder
