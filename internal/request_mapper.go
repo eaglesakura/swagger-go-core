@@ -10,6 +10,7 @@ import (
 	"strings"
 	"github.com/eaglesakura/swagger-go-core"
 	"github.com/eaglesakura/swagger-go-core/errors"
+	//"fmt"
 )
 
 /**
@@ -37,6 +38,29 @@ func NewHandleMapper() swagger.HandleMapper {
 	}
 }
 
+func initMapper(factory swagger.ContextFactory, r *mux.Route, handler swagger.HandleRequest) {
+	r.Methods(handler.Method).Path(handler.Path).HandlerFunc(func(write http.ResponseWriter, request *http.Request) {
+		//write.WriteHeader(http.StatusInternalServerError)
+		//write.Write([]byte(fmt.Sprintf("Request[%v:%v] Mapping[%v:%v]", request.Method, request.URL.Path, handler.Method, handler.Path)))
+
+		context := factory.NewContext(request)
+		var responder swagger.Responder
+		responderRef := &responder
+		defer func() {
+			// エラーからの復旧を行う
+			if err := recover(); err != nil && (*responderRef) == nil {
+				errorRef, ok := err.(error)
+				if !ok {
+					errorRef = errors.New(http.StatusInternalServerError, "Unknown Error")
+				}
+				*responderRef = context.NewBindErrorResponse(errorRef)
+			}
+			context.Done(write, *responderRef)
+		}()
+		responder = handler.HandlerFunc(context, request)
+	})
+}
+
 /**
  * Routerに登録する
  * GAE/Goの場合、 http.Handle("/path/to/api", router) でハンドリングが提供できる
@@ -45,28 +69,8 @@ func (it *HandleMapperImpl)NewRouter(factory swagger.ContextFactory) *mux.Router
 	router := mux.NewRouter()
 
 	for _, mapping := range it.ListMethodMappers() {
-		for _, handle := range mapping.handlers {
-			router.HandleFunc(mapping.Path, func(write http.ResponseWriter, request *http.Request) {
-				if request.Method != handle.Method {
-					return
-				}
-
-				context := factory.NewContext(request)
-				var responder swagger.Responder
-				responderRef := &responder
-				defer func() {
-					// エラーからの復旧を行う
-					if err := recover(); err != nil && (*responderRef) == nil {
-						errorRef, ok := err.(error)
-						if !ok {
-							errorRef = errors.New(http.StatusInternalServerError, "Unknown Error")
-						}
-						*responderRef = context.NewBindErrorResponse(errorRef)
-					}
-					context.Done(write, *responderRef)
-				}()
-				responder = handle.HandlerFunc(context, request)
-			}).Methods(handle.Method)
+		for _, handler := range mapping.handlers {
+			initMapper(factory, router.NewRoute(), handler)
 		}
 	}
 
