@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 func AddPath(base string, local string) string {
@@ -16,6 +17,10 @@ func AddPath(base string, local string) string {
 		local = local[1:]
 	}
 	return base + "/" + local
+}
+
+func EscapeString(origin string) string {
+	return url.QueryEscape(origin)
 }
 
 func ParameterToString(ptr interface{}) string {
