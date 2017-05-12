@@ -11,6 +11,10 @@ type RawBufferResponse struct {
 	Payload     []byte
 }
 
+type RedirectResponse struct {
+	Location string
+}
+
 func (it *RawBufferResponse) WriteResponse(w http.ResponseWriter, p swagger.Producer) {
 	w.WriteHeader(it.StatusCode)
 	if it.ContentType != "" {
@@ -20,4 +24,9 @@ func (it *RawBufferResponse) WriteResponse(w http.ResponseWriter, p swagger.Prod
 	if it.Payload != nil {
 		w.Write(it.Payload)
 	}
+}
+
+func (it *RedirectResponse) WriteResponse(w http.ResponseWriter, p swagger.Producer) {
+	w.Header().Add("Location", it.Location)
+	w.WriteHeader(301)
 }
