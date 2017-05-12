@@ -26,11 +26,6 @@ type FetchClient interface {
 	ValidatorFactory
 
 	/**
-	 * 文字列をURL Encodeする
-	 */
-	EscapeString(origin string) string
-
-	/**
 	 * エンドポイントのPATHを指定する
 	 */
 	SetApiPath(path string)
