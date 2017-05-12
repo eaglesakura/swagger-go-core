@@ -10,17 +10,24 @@ import (
 	"github.com/eaglesakura/swagger-go-core/errors"
 )
 
+type FetchFunction func(it *BasicFetchClient, resultPtr interface{}) error
+
 type BasicFetchClient struct {
 	/**
 	 * ex) "http://example.com"
 	 */
-	Endpoint string
-	Client   *http.Client
-	Request  *http.Request
+	Endpoint    string
+	Client      *http.Client
+	Request     *http.Request
 
-	apiPath  string
-	queries  url.Values
-	payload  swagger.DataPayload
+	/**
+	 * custom fetch function
+	 */
+	CustomFetch FetchFunction
+
+	apiPath     string
+	queries     url.Values
+	payload     swagger.DataPayload
 }
 
 /**
@@ -32,6 +39,7 @@ func NewFetchClient(endpoint string, client *http.Client) *BasicFetchClient {
 		Client:client,
 		Request:req,
 		Endpoint:endpoint,
+		CustomFetch:basicFetchFunction,
 		queries:url.Values{},
 	}
 }
@@ -74,22 +82,7 @@ func (it*BasicFetchClient)SetPayload(payload swagger.DataPayload) {
 	it.payload = payload
 }
 
-func (it*BasicFetchClient)Fetch(resultPtr interface{}) error {
-
-	// build url
-	{
-		reqUrl, err := url.Parse(AddPath(it.Endpoint, it.apiPath))
-		if err != nil {
-			return err
-		}
-		if len(it.queries) > 0 {
-			reqUrl.RawQuery = it.queries.Encode()
-		}
-
-		it.Request.URL = reqUrl
-		it.Request.Host = reqUrl.Host
-	}
-
+func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
 	// request payload
 	if it.payload != nil {
 		it.Request.Header.Set("Content-Type", it.payload.GetContentType())
@@ -117,4 +110,22 @@ func (it*BasicFetchClient)Fetch(resultPtr interface{}) error {
 
 	// decode json
 	return json.Unmarshal(buf, resultPtr)
+}
+
+func (it*BasicFetchClient)Fetch(resultPtr interface{}) error {
+	// build url
+	{
+		reqUrl, err := url.Parse(AddPath(it.Endpoint, it.apiPath))
+		if err != nil {
+			return err
+		}
+		if len(it.queries) > 0 {
+			reqUrl.RawQuery = it.queries.Encode()
+		}
+
+		it.Request.URL = reqUrl
+		it.Request.Host = reqUrl.Host
+	}
+
+	return it.CustomFetch(it, resultPtr)
 }
