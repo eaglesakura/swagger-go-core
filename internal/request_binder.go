@@ -84,6 +84,16 @@ func stringToValue(value string, resultType string, result interface{}) error {
 				return nil;
 			}
 		}
+	case "bool":
+		value, err := strconv.ParseBool(value)
+		if err != nil {
+			return err
+		}
+
+		if ptr, ok := result.(**bool); ok {
+			*ptr = &value
+			return nil
+		}
 	}
 
 	return errors.New(http.StatusBadRequest, fmt.Sprintf("Parameter parse error value[%v] type[%v]", value, resultType))
