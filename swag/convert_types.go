@@ -535,6 +535,19 @@ func Float64ValueMap(src map[string]*float64) map[string]float64 {
 	return dst
 }
 
+// Float32 returns a pointer to of the float32 value passed in.
+func Float32(v float32) *float32 {
+	return &v
+}
+
+// Float32Value returns the value of the float32 pointer passed in or
+// 0 if the pointer is nil.
+func Float32Value(v *float32) float32 {
+	if v != nil {
+		return *v
+	}
+	return 0
+}
 // Time returns a pointer to of the time.Time value passed in.
 func Time(v time.Time) *time.Time {
 	return &v
