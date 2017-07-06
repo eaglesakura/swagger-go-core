@@ -33,6 +33,10 @@ type RequestContext interface {
 	 * 必要に応じてリソースの開放処理を行う。aetestで生成されたContext等。
 	 */
 	Done(writer http.ResponseWriter, response Responder)
+
+	LogErrorv(args ...interface{})
+
+	LogErrorf(fmt string, args ...interface{})
 }
 
 type ContextFactory interface {
