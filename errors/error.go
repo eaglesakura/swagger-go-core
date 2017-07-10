@@ -29,3 +29,13 @@ func New(code int32, message string, args ...interface{}) error {
 	return &apiError{code, message}
 }
 
+/**
+ * panic()からrecoverされた際に目印としてラップされる
+ */
+type PanicError struct {
+	Origin error
+}
+
+func (a *PanicError) Error() string {
+	return a.Origin.Error()
+}

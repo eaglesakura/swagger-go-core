@@ -10,7 +10,6 @@ import (
 	"strings"
 	"github.com/eaglesakura/swagger-go-core"
 	"github.com/eaglesakura/swagger-go-core/errors"
-	//"fmt"
 )
 
 /**
@@ -34,7 +33,7 @@ type HandleMapperImpl struct {
  */
 func NewHandleMapper() swagger.HandleMapper {
 	return &HandleMapperImpl{
-		Mappers:map[string]*MethodMapper{},
+		Mappers: map[string]*MethodMapper{},
 	}
 }
 
@@ -52,6 +51,10 @@ func initMapper(factory swagger.ContextFactory, r *mux.Route, handler swagger.Ha
 				errorRef, ok := err.(error)
 				if !ok {
 					errorRef = errors.New(http.StatusInternalServerError, "Unknown Error")
+				} else {
+					errorRef = &errors.PanicError{
+						Origin: errorRef,
+					}
 				}
 				*responderRef = context.NewBindErrorResponse(errorRef)
 			}
@@ -65,7 +68,7 @@ func initMapper(factory swagger.ContextFactory, r *mux.Route, handler swagger.Ha
  * Routerに登録する
  * GAE/Goの場合、 http.Handle("/path/to/api", router) でハンドリングが提供できる
  */
-func (it *HandleMapperImpl)NewRouter(factory swagger.ContextFactory) *mux.Router {
+func (it *HandleMapperImpl) NewRouter(factory swagger.ContextFactory) *mux.Router {
 	router := mux.NewRouter()
 
 	for _, mapping := range it.ListMethodMappers() {
@@ -80,19 +83,19 @@ func (it *HandleMapperImpl)NewRouter(factory swagger.ContextFactory) *mux.Router
 /**
  * 同一URL内部でのメソッドバインディングを行う
  */
-func (it *MethodMapper)PutHandler(request swagger.HandleRequest) {
+func (it *MethodMapper) PutHandler(request swagger.HandleRequest) {
 	it.handlers[request.Method] = request
 }
 
 /**
  * ハンドラのバインディングを行う
  */
-func (it *HandleMapperImpl)PutHandler(request swagger.HandleRequest) {
+func (it *HandleMapperImpl) PutHandler(request swagger.HandleRequest) {
 	list, ok := it.Mappers[request.Path]
 	if !ok {
 		list = &MethodMapper{
-			Path:request.Path,
-			handlers:map[string]swagger.HandleRequest{},
+			Path:     request.Path,
+			handlers: map[string]swagger.HandleRequest{},
 		}
 		it.Mappers[request.Path] = list
 	}
@@ -102,7 +105,7 @@ func (it *HandleMapperImpl)PutHandler(request swagger.HandleRequest) {
 
 type MethodMapperList []*MethodMapper
 
-func (it *HandleMapperImpl)ListMethodMappers() MethodMapperList {
+func (it *HandleMapperImpl) ListMethodMappers() MethodMapperList {
 	result := MethodMapperList{}
 
 	// map to list
@@ -115,16 +118,14 @@ func (it *HandleMapperImpl)ListMethodMappers() MethodMapperList {
 	return result
 }
 
-
 // Len is the number of elements in the collection.
-func (it MethodMapperList)Len() int {
+func (it MethodMapperList) Len() int {
 	return len(it)
 }
 
-
 // Less reports whether the element with
 // index i should sort before the element with index j.
-func (it MethodMapperList)Less(i, j int) bool {
+func (it MethodMapperList) Less(i, j int) bool {
 	// 長さが違うならば、パスが長い方を優先してハンドリング
 	if len(it[i].Path) != len(it[j].Path) {
 		return len(it[i].Path) > len(it[j].Path)
@@ -133,8 +134,9 @@ func (it MethodMapperList)Less(i, j int) bool {
 	// 長さが同じならば、compareする
 	return strings.Compare(it[i].Path, it[j].Path) > 0
 }
+
 // Swap swaps the elements with indexes i and j.
-func (it MethodMapperList)Swap(i, j int) {
+func (it MethodMapperList) Swap(i, j int) {
 	tmp := it[i]
 	it[i] = it[j]
 	it[j] = tmp
