@@ -1,10 +1,3 @@
-/*
-port github.com/go-openapi/runtime/
-
-LICENSE https://github.com/go-openapi/runtime/blob/master/LICENSE
-
-go-openapiは内部でunsafeを使用しているため、unsafeを取り除いたコンパクト実装を定義する
-*/
 package swagger
 
 import (
@@ -39,7 +32,6 @@ type Consumer interface {
 func (it ConsumerFunc) Consume(r io.Reader, v interface{}) error {
 	return it(r, v)
 }
-
 
 // Responder is an interface for types to implement
 // when they want to be considered for writing HTTP responses

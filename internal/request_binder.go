@@ -108,20 +108,20 @@ type BasicRequestBinder struct {
 
 func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
 	return &BasicRequestBinder{
-		Request:req,
-		ConsumerFactory:consumerFactory,
+		Request:         req,
+		ConsumerFactory: consumerFactory,
 	}
 }
 
-func (it *BasicRequestBinder)GetConsumer(contentType string) swagger.Consumer {
+func (it *BasicRequestBinder) GetConsumer(contentType string) swagger.Consumer {
 	return it.ConsumerFactory(contentType)
 }
 
-func (it *BasicRequestBinder)GetContentType() string {
+func (it *BasicRequestBinder) GetContentType() string {
 	return it.Request.Header.Get("Content-Type")
 }
 
-func (it *BasicRequestBinder)BindPath(key string, resultType string, result interface{}) error {
+func (it *BasicRequestBinder) BindPath(key string, resultType string, result interface{}) error {
 	if it.pathValues == nil {
 		it.pathValues = mux.Vars(it.Request)
 	}
@@ -134,7 +134,7 @@ func (it *BasicRequestBinder)BindPath(key string, resultType string, result inte
 	return stringToValue(value, resultType, result)
 }
 
-func (it *BasicRequestBinder)BindQuery(key string, resultType string, result interface{}) error {
+func (it *BasicRequestBinder) BindQuery(key string, resultType string, result interface{}) error {
 	if it.queryValues == nil {
 		it.queryValues = it.Request.URL.Query()
 	}
@@ -147,7 +147,7 @@ func (it *BasicRequestBinder)BindQuery(key string, resultType string, result int
 	return stringToValue(value, resultType, result)
 }
 
-func (it *BasicRequestBinder)BindHeader(key string, resultType string, result interface{}) error {
+func (it *BasicRequestBinder) BindHeader(key string, resultType string, result interface{}) error {
 	value := it.Request.Header.Get(key)
 	if len(value) == 0 {
 		//return errors.New(http.StatusBadRequest, fmt.Sprintf("HeaderValue not found key[%v] path[%v]", key, it.Request.URL))
@@ -156,7 +156,7 @@ func (it *BasicRequestBinder)BindHeader(key string, resultType string, result in
 	return stringToValue(value, resultType, result)
 }
 
-func (it *BasicRequestBinder)BindForm(key string, resultType string, result interface{}) error {
+func (it *BasicRequestBinder) BindForm(key string, resultType string, result interface{}) error {
 	if it.Request.Form == nil {
 		err := it.Request.ParseForm()
 		if err != nil {
@@ -173,7 +173,7 @@ func (it *BasicRequestBinder)BindForm(key string, resultType string, result inte
 	return stringToValue(value, resultType, result)
 }
 
-func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) error {
+func (it *BasicRequestBinder) BindBody(resultType string, result interface{}) error {
 	consumer := it.GetConsumer(it.GetContentType())
 
 	if consumer == nil {
@@ -183,20 +183,12 @@ func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) err
 	return consumer.Consume(it.Request.Body, result)
 }
 
-
-/*
-その他の特殊データのバインディングを行う
-*/
-func (it *BasicRequestBinder)BindExtra(resultType string, result interface{}) error {
-	return nil
-}
-
 /*
 Validatorを生成する
 */
-func (it *BasicRequestBinder)NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
+func (it *BasicRequestBinder) NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
 	return &ParameterValidatorImpl{
-		Value:value,
-		IsNil:isNil,
+		Value: value,
+		IsNil: isNil,
 	}
 }
