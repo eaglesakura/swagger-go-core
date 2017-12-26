@@ -1,13 +1,17 @@
-/**
- * port by github.com/go-openapi/runtime/
- *
- * go-openapiは内部でunsafeを参照しているため、そのままではGAE/Goに組み込めない。
- * interfaceのみをportすることで互換性を保つ。
- */
+/*
+port github.com/go-openapi/runtime/
+
+LICENSE https://github.com/go-openapi/runtime/blob/master/LICENSE
+
+go-openapiは内部でunsafeを使用しているため、unsafeを取り除いたコンパクト実装を定義する
+*/
 package errors
 
 import "fmt"
 
+/*
+httpステータスコードと表示メッセージを定義したエラー
+*/
 type apiError struct {
 	code    int32
 	message string
@@ -29,9 +33,9 @@ func New(code int32, message string, args ...interface{}) error {
 	return &apiError{code, message}
 }
 
-/**
- * panic()からrecoverされた際に目印としてラップされる
- */
+/*
+panic()からrecoverされた際に目印としてラップされる
+*/
 type PanicError struct {
 	Origin error
 }

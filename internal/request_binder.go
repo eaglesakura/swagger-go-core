@@ -184,17 +184,16 @@ func (it *BasicRequestBinder)BindBody(resultType string, result interface{}) err
 }
 
 
-
-/**
- * その他の特殊データのバインディングを行う
- */
+/*
+その他の特殊データのバインディングを行う
+*/
 func (it *BasicRequestBinder)BindExtra(resultType string, result interface{}) error {
 	return nil
 }
 
-/**
- * Validatorを生成する
- */
+/*
+Validatorを生成する
+*/
 func (it *BasicRequestBinder)NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
 	return &ParameterValidatorImpl{
 		Value:value,

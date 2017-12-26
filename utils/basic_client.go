@@ -12,73 +12,74 @@ import (
 
 type FetchFunction func(it *BasicFetchClient, resultPtr interface{}) error
 
+/*
+saggerクライアントとして使用可能なデフォルトFetchClient実装を提供する
+*/
 type BasicFetchClient struct {
-	/**
-	 * ex) "http://example.com"
-	 */
-	Endpoint    string
-	Client      *http.Client
-	Request     *http.Request
+	/*
+	ex)
+		"http://example.com/api"
+	*/
+	Endpoint string
 
-	/**
-	 * custom fetch function
-	 */
+	/*
+	デフォルトで使用するHttpクライアント
+	*/
+	Client *http.Client
+
+	/*
+	セットアップ対象のHttp Request
+	*/
+	Request *http.Request
+
+	/*
+	Fetch時の処理を移譲するDelegate
+	*/
 	CustomFetch FetchFunction
 
-	apiPath     string
-	queries     url.Values
-	payload     swagger.DataPayload
+	apiPath string
+	queries url.Values
+	payload swagger.DataPayload
 }
 
-/**
- * gen / default client
- */
+/*
+saggerクライアントとして使用可能なデフォルトFetchClient実装を生成する
+
+ex)
+	NewFetchClient("https://your-gcp-project.appspot.com", httpClient)
+*/
 func NewFetchClient(endpoint string, client *http.Client) *BasicFetchClient {
 	req, _ := http.NewRequest("GET", "https://example.com", nil)
 	return &BasicFetchClient{
-		Client:client,
-		Request:req,
-		Endpoint:endpoint,
-		CustomFetch:basicFetchFunction,
-		queries:url.Values{},
+		Client:      client,
+		Request:     req,
+		Endpoint:    endpoint,
+		CustomFetch: basicFetchFunction,
+		queries:     url.Values{},
 	}
 }
 
-func (it*BasicFetchClient) NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
+func (it *BasicFetchClient) NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
 	return NewValidator(value, isNil)
 }
 
-/**
- * エンドポイントのPATHを指定する
- */
-func (it*BasicFetchClient)SetApiPath(path string) {
+func (it *BasicFetchClient) SetApiPath(path string) {
 	it.apiPath = path
 }
 
-/**
- * httpメソッドを指定する
- */
-func (it*BasicFetchClient)SetMethod(method string) {
+func (it *BasicFetchClient) SetMethod(method string) {
 	it.Request.Method = method
 }
 
-/**
- * @param key   query key(not url encoded!)
- * @param value query value
- */
-func (it*BasicFetchClient)AddQueryParam(key string, value string) {
+func (it *BasicFetchClient) AddQueryParam(key string, value string) {
 	it.queries.Add(key, url.QueryEscape(value))
 }
 
-/**
- * @param key   query key(not url encoded!)
- * @param value query value
- */
-func (it*BasicFetchClient)AddHeader(key string, value string) {
+func (it *BasicFetchClient) AddHeader(key string, value string) {
 	it.Request.Header.Add(key, url.QueryEscape(value))
 }
 
-func (it*BasicFetchClient)SetPayload(payload swagger.DataPayload) {
+func (it *BasicFetchClient) SetPayload(payload swagger.DataPayload) {
 	it.payload = payload
 }
 
@@ -112,7 +113,7 @@ func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
 	return json.Unmarshal(buf, resultPtr)
 }
 
-func (it*BasicFetchClient)Fetch(resultPtr interface{}) error {
+func (it *BasicFetchClient) Fetch(resultPtr interface{}) error {
 	// build url
 	{
 		reqUrl, err := url.Parse(AddPath(it.Endpoint, it.apiPath))

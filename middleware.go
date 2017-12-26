@@ -1,9 +1,10 @@
-/**
- * port by github.com/go-openapi/runtime/
- *
- * go-openapiは内部でunsafeを参照しているため、そのままではGAE/Goに組み込めない。
- * interfaceのみをportすることで互換性を保つ。
- */
+/*
+port github.com/go-openapi/runtime/
+
+LICENSE https://github.com/go-openapi/runtime/blob/master/LICENSE
+
+go-openapiは内部でunsafeを使用しているため、unsafeを取り除いたコンパクト実装を定義する
+*/
 package swagger
 
 import (

@@ -5,12 +5,18 @@ import (
 	"github.com/eaglesakura/swagger-go-core"
 )
 
+/*
+バイナリデータ等、単純なデータを返却するためのレスポンスデフォルト実装を定義する
+*/
 type RawBufferResponse struct {
 	StatusCode  int
 	ContentType string
 	Payload     []byte
 }
 
+/*
+別なURL（Google Cloud Storage等）へのリダイレクトを行わせるレスポンスデフォルト実装を定義する
+*/
 type RedirectResponse struct {
 	Location string
 }

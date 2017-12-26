@@ -1,37 +1,40 @@
 package swagger
 
-/**
- * 入力されたパラメータのバリデーションを行なうインターフェース
- */
+/*
+入力されたパラメータのバリデーションを行なうinterface.
+
+未実装、もしくは意図的にValidationを無視することも実装側に任される.
+*/
 type ParameterValidator interface {
-	/**
-	 * パラメータがNotNullである
-	 */
+
+	/*
+	パラメータが != nil である
+	*/
 	Required(set bool) ParameterValidator
 
-	/**
-	 * 文字列の正規表現パターンを指定する
-	 */
+	/*
+	文字列の正規表現パターンを指定する
+	*/
 	Pattern(pattern string) ParameterValidator
 
-	/**
-	 * 文字列の最小長を指定する
-	 */
+	/*
+	文字列の最小長を指定する
+	*/
 	MinLength(len int) ParameterValidator
 
-	/**
-	 * 文字列の最大長を指定する
-	 */
+	/*
+	文字列の最大長を指定する
+	*/
 	MaxLength(len int) ParameterValidator
 
-	/**
-	 * valuesに指定したいずれかの値に合致する必要がある
-	 */
+	/*
+	valuesに指定したいずれかの値に合致する必要がある
+	*/
 	EnumPattern(values []string) ParameterValidator
 
-	/**
-	 * 全ての検証に合格していればtrue
-	 */
+	/*
+	全ての検証に合格していればtrue
+	*/
 	Valid(factory ValidatorFactory) bool
 }
 

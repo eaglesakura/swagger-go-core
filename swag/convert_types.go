@@ -1,3 +1,10 @@
+/*
+port github.com/go-openapi/runtime/
+
+LICENSE https://github.com/go-openapi/runtime/blob/master/LICENSE
+
+go-openapiは内部でunsafeを使用しているため、unsafeを取り除いたコンパクト実装を定義する
+*/
 package swag
 
 import "time"

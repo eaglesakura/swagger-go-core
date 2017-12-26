@@ -5,40 +5,54 @@ import (
 	"github.com/gorilla/mux"
 )
 
-/**
- * APIエンドポイント(&METHOD) ごとに用意されるハンドリングデータ
- * swagger-codegenにより自動生成される。
- */
+/*
+APIエンドポイント(&METHOD) ごとに用意されるハンドリングデータ.
+swagger-codegenにより自動生成される.
+*/
 type HandleRequest struct {
-	/**
-	 * APIへのパスを設定する。
-	 * これはswagger.jsonの"{basePath}{apiPath}"で指定される。
-	 */
-	Path        string
+	/*
+	internal.
 
-	/**
-	 * http methodを指定する。
-	 * GET, POST, PUT...
-	 */
-	Method      string
+	APIへのパスを設定する。
 
-	/**
-	 * ハンドリング用の関数を指定する。
-	 */
+	swagger.[json|yaml]の"{basePath}{apiPath}"で指定される。
+	エンドポイントはdev/stg等の環境で切り替わる可能性があるため、実装側に任されている。
+
+	ex)
+		"api/v1/user/"
+	*/
+	Path string
+
+	/*
+	internal.
+
+	http methodを指定する。
+
+	ex)
+		"GET", "POST", "PUT"...
+	*/
+	Method string
+
+	/*
+	internal.
+
+	ハンドリング用の関数.
+	*/
 	HandlerFunc func(context RequestContext, request *http.Request) Responder
 }
 
-/**
- * HandleRequestと実際のRouterのマッピングを行なう。
- */
+/*
+HandleRequestと実際のRouterのマッピングを行なう。
+*/
 type HandleMapper interface {
-	/**
-	 * リクエストハンドラを追加する
-	 */
+
+	/*
+	リクエストハンドラを追加する
+	*/
 	PutHandler(request HandleRequest)
 
-	/**
-	 * 最終的なハンドリングを行なうためのRouterを生成する
-	 */
+	/*
+	gorilla/muxで処理するためのRouterを生成する.
+	*/
 	NewRouter(factory ContextFactory) *mux.Router
 }

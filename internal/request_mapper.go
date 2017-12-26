@@ -1,6 +1,6 @@
-/**
- * httpリクエストと最終的なHandle Functionの関連付けを行う
- */
+/*
+httpリクエストと最終的なハンドラの関連付けを行う
+*/
 package swagger
 
 import (
@@ -12,25 +12,26 @@ import (
 	"github.com/eaglesakura/swagger-go-core/errors"
 )
 
-/**
- * １つのPathに対してメソッドのマッピングを行う
- */
+/*
+１つのPathに対してメソッドのマッピングを行う
+*/
 type MethodMapper struct {
 	Path     string
 	handlers map[string]swagger.HandleRequest
 }
 
-/**
- * ハンドルマッピングを行う
- * 最終的には gorilla/mux でバインディングされる
- */
+/*
+ハンドルマッピングを行う.
+
+最終的には gorilla/mux でバインディングされる.
+*/
 type HandleMapperImpl struct {
 	Mappers map[string]*MethodMapper
 }
 
-/**
- * デフォルトのMapperを生成する
- */
+/*
+デフォルトのMapperを生成する
+*/
 func NewHandleMapper() swagger.HandleMapper {
 	return &HandleMapperImpl{
 		Mappers: map[string]*MethodMapper{},
@@ -64,10 +65,11 @@ func initMapper(factory swagger.ContextFactory, r *mux.Route, handler swagger.Ha
 	})
 }
 
-/**
- * Routerに登録する
- * GAE/Goの場合、 http.Handle("/path/to/api", router) でハンドリングが提供できる
- */
+/*
+Routerに登録する
+
+GAE/Goの場合、 http.Handle("/path/to/api", router) でハンドリングが提供できる
+*/
 func (it *HandleMapperImpl) NewRouter(factory swagger.ContextFactory) *mux.Router {
 	router := mux.NewRouter()
 

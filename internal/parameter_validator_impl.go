@@ -45,9 +45,9 @@ func (it *ParameterValidatorImpl)MaxLength(len int) swagger.ParameterValidator {
 	return it
 }
 
-/**
- * valuesに指定したいずれかの値に合致する必要がある
- */
+/*
+valuesに指定したいずれかの値に合致する必要がある
+*/
 func (it *ParameterValidatorImpl)EnumPattern(values []string) swagger.ParameterValidator {
 	it.enumPattern = &values
 	return it
@@ -62,7 +62,7 @@ func (it *ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
 		}
 
 		// 必須でないならばこれ以上のチェックは必要ない
-		if (it.required == nil || !(*it.required)) {
+		if it.required == nil || !(*it.required) {
 			return true
 		}
 	}
