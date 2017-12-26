@@ -41,7 +41,7 @@ type FetchClient interface {
 	エンドポイントのPATHを指定する.
 
 	ex)
-		"https://your-gcp-project.appspot.com/api"
+		"api/v1/users/123/profile"
 	*/
 	SetApiPath(path string)
 
