@@ -10,7 +10,6 @@ swaggerクライアントのデータ送信用のインターフェースを定�
 type DataPayload interface {
 	/*
 	content-length ヘッダに対応する.
-
 	不定の場合、0未満の値を返却する.
 	*/
 	GetContentLength() int
@@ -38,7 +37,10 @@ type FetchClient interface {
 	ValidatorFactory
 
 	/*
-	エンドポイントのPATHを指定する.
+	APIのパスを指定する.
+
+	URLに直接パラメータが含まれる場合、swaggerが自動的にパラメータを付与する.
+	エンドポイントはdev/prod等の環境を変えることがあるため、swaggerからは渡されずに実装側で文字列連結を行う.
 
 	ex)
 		"api/v1/users/123/profile"
@@ -47,7 +49,6 @@ type FetchClient interface {
 
 	/*
 	httpメソッドを指定する
-
 	ex)
 		"GET", "POST", "PUT"...
 	*/

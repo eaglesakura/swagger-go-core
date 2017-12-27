@@ -26,16 +26,18 @@ type RequestContext interface {
 	NewRequestBinder(request *http.Request) (RequestBinder, error)
 
 	/*
-	Request -> Parameterのバインド失敗時に呼び出され、エラーレスポンスを生成する。
+	Request -> Parameterのバインド失敗時に呼び出され、エラーレスポンスを生成する.
 	*/
 	NewBindErrorResponse(err error) Responder
 
 	/*
-	ハンドリングの完了処理を行う。
-	このメソッドは制御の最後にかならず呼び出される。
-	このメソッドでは基本的に response.WriteResponse(writer, {Producer})を呼び出す。
-	どのProducerが利用されるかは、Contextの実装者に任される。
-	必要に応じてリソースの開放処理を行う。aetestで生成されたContext等。
+	ハンドリングの完了処理を行う.
+	このメソッドは制御の最後にかならず呼び出される.
+	このメソッドでは基本的に response.WriteResponse(writer, {Producer})を呼び出す.
+
+	どのProducerが利用されるかは、RequestContextの実装に任される.
+	必ず呼び出されるため、必要に応じてリソースの開放処理を行う.
+	ex) aetestで生成されたContext等.
 	*/
 	Done(writer http.ResponseWriter, response Responder)
 }

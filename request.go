@@ -1,5 +1,8 @@
 package swagger
 
+/*
+httpリクエストから構造体へ値をバインドする機能を提供する.
+*/
 type RequestBinder interface {
 	ValidatorFactory
 
