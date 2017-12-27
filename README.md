@@ -86,7 +86,7 @@ func callHogeFuga() {
 		return nil, err
 	}
 
-    // Hello World!
-    fmt.Printf("%v\n", *result.Message)
+	// Hello World!
+	fmt.Printf("%v\n", *result.Message)
 }
 ```
