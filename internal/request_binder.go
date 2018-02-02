@@ -1,13 +1,14 @@
 package swagger
 
 import (
-	"net/http"
-	"strconv"
-	"net/url"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/eaglesakura/swagger-go-core"
 	"github.com/eaglesakura/swagger-go-core/errors"
+	"github.com/gorilla/mux"
+	"io"
+	"net/http"
+	"net/url"
+	"strconv"
 )
 
 func stringToValue(value string, resultType string, result interface{}) error {
@@ -101,14 +102,16 @@ func stringToValue(value string, resultType string, result interface{}) error {
 
 type BasicRequestBinder struct {
 	Request         *http.Request
+	BodyReader      io.Reader
 	ConsumerFactory func(contentType string) swagger.Consumer
 	pathValues      map[string]string
 	queryValues     url.Values
 }
 
-func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
+func NewRequestBinder(req *http.Request, bodyReader io.Reader, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
 	return &BasicRequestBinder{
 		Request:         req,
+		BodyReader:      bodyReader,
 		ConsumerFactory: consumerFactory,
 	}
 }
@@ -180,7 +183,7 @@ func (it *BasicRequestBinder) BindBody(resultType string, result interface{}) er
 		return errors.New(http.StatusBadRequest, "Body parse error[Unsupported consumer.]")
 	}
 
-	return consumer.Consume(it.Request.Body, result)
+	return consumer.Consume(it.BodyReader, result)
 }
 
 /*

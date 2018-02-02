@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/eaglesakura/swagger-go-core"
 	swagger_internal "github.com/eaglesakura/swagger-go-core/internal"
+	"io"
 	"net/http"
 )
 
@@ -33,5 +34,15 @@ func NewHandleMapper() swagger.HandleMapper {
 Consumerの取得はFunctionに任せられる.
 */
 func NewRequestBinder(req *http.Request, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
-	return swagger_internal.NewRequestBinder(req, consumerFactory)
+	return NewRequestBinderWithBodyReader(req, req.Body, consumerFactory)
+}
+
+/*
+デフォルトのRequestBinderを生成する.
+
+Consumerの取得はFunctionに任せられる.
+Body読込に横槍を入れることが可能となる.
+*/
+func NewRequestBinderWithBodyReader(req *http.Request, reader io.Reader, consumerFactory func(contentType string) swagger.Consumer) swagger.RequestBinder {
+	return swagger_internal.NewRequestBinder(req, reader, consumerFactory)
 }
