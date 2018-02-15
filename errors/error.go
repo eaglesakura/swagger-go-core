@@ -37,9 +37,14 @@ func New(code int32, message string, args ...interface{}) error {
 panic()からrecoverされた際に目印としてラップされる
 */
 type PanicError struct {
-	Origin error
+	Origin interface{}
 }
 
 func (a *PanicError) Error() string {
-	return a.Origin.Error()
+	err, ok := a.Origin.(error)
+	if ok {
+		return err.Error()
+	} else {
+		return fmt.Sprintf("%v", a.Origin)
+	}
 }

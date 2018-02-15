@@ -4,12 +4,12 @@ httpリクエストと最終的なハンドラの関連付けを行う
 package swagger
 
 import (
-	"net/http"
-	"github.com/gorilla/mux"
-	"sort"
-	"strings"
 	"github.com/eaglesakura/swagger-go-core"
 	"github.com/eaglesakura/swagger-go-core/errors"
+	"github.com/gorilla/mux"
+	"net/http"
+	"sort"
+	"strings"
 )
 
 /*
@@ -47,17 +47,9 @@ func initMapper(factory swagger.ContextFactory, r *mux.Route, handler swagger.Ha
 		var responder swagger.Responder
 		responderRef := &responder
 		defer func() {
-			// エラーからの復旧を行う
+			// recover()でエラーチェックを行い、エラーが発生していたらレスポンスを生成させる.
 			if err := recover(); err != nil && (*responderRef) == nil {
-				errorRef, ok := err.(error)
-				if !ok {
-					errorRef = errors.New(http.StatusInternalServerError, "Unknown Error")
-				} else {
-					errorRef = &errors.PanicError{
-						Origin: errorRef,
-					}
-				}
-				*responderRef = context.NewBindErrorResponse(errorRef)
+				*responderRef = context.NewBindErrorResponse(&errors.PanicError{Origin: err})
 			}
 			context.Done(write, *responderRef)
 		}()
