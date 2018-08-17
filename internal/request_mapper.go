@@ -74,14 +74,14 @@ func (it *HandleMapperImpl) NewRouter(factory swagger.ContextFactory) *mux.Route
 	return router
 }
 
-/**
+/*
  * 同一URL内部でのメソッドバインディングを行う
  */
 func (it *MethodMapper) PutHandler(request swagger.HandleRequest) {
 	it.handlers[request.Method] = request
 }
 
-/**
+/*
  * ハンドラのバインディングを行う
  */
 func (it *HandleMapperImpl) PutHandler(request swagger.HandleRequest) {
