@@ -76,7 +76,7 @@ func (it *BasicFetchClient) AddQueryParam(key string, value string) {
 }
 
 func (it *BasicFetchClient) AddHeader(key string, value string) {
-	it.Request.Header.Add(key, url.QueryEscape(value))
+	it.Request.Header.Add(key, value)
 }
 
 func (it *BasicFetchClient) SetPayload(payload swagger.DataPayload) {
