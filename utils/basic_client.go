@@ -99,14 +99,16 @@ func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
 
 	if err != nil {
 		return err
-	} else if (resp.StatusCode / 100) != 2 {
-		// statuscode error
-		return errors.New(int32(resp.StatusCode), "FetchError[%v]%v]", it.Request.Method, it.Request.URL.Path)
 	}
 
 	buf, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
+	}
+
+	if (resp.StatusCode / 100) != 2 {
+		// statuscode error
+		return errors.New(int32(resp.StatusCode), "FetchError[%v]%v]: code='%v' / body=%v", it.Request.Method, it.Request.URL.Path, resp.StatusCode, string(buf))
 	}
 
 	// decode json
