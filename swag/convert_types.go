@@ -555,6 +555,7 @@ func Float32Value(v *float32) float32 {
 	}
 	return 0
 }
+
 // Time returns a pointer to of the time.Time value passed in.
 func Time(v time.Time) *time.Time {
 	return &v

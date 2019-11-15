@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"io"
 	"encoding/json"
 	"github.com/eaglesakura/swagger-go-core"
+	"io"
 )
 
 /*

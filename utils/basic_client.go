@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
-	"github.com/eaglesakura/swagger-go-core"
-	"net/url"
 	"fmt"
+	"github.com/eaglesakura/swagger-go-core"
 	"github.com/eaglesakura/swagger-go-core/errors"
+	"io/ioutil"
+	"net/http"
+	"net/url"
 )
 
 type FetchFunction func(it *BasicFetchClient, resultPtr interface{}) error
@@ -17,23 +17,23 @@ saggerクライアントとして使用可能なデフォルトFetchClient実装
 */
 type BasicFetchClient struct {
 	/*
-	ex)
-		"http://example.com/api"
+		ex)
+			"http://example.com/api"
 	*/
 	Endpoint string
 
 	/*
-	デフォルトで使用するHttpクライアント
+		デフォルトで使用するHttpクライアント
 	*/
 	Client *http.Client
 
 	/*
-	セットアップ対象のHttp Request
+		セットアップ対象のHttp Request
 	*/
 	Request *http.Request
 
 	/*
-	Fetch時の処理を移譲するDelegate
+		Fetch時の処理を移譲するDelegate
 	*/
 	CustomFetch FetchFunction
 

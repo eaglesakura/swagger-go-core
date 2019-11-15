@@ -7,27 +7,27 @@ type RequestBinder interface {
 	ValidatorFactory
 
 	/*
-	URLからパラメータを取り出す
+		URLからパラメータを取り出す
 	*/
 	BindPath(key string, resultType string, result interface{}) error
 
 	/*
-	Query Stringからパラメータを取り出す
+		Query Stringからパラメータを取り出す
 	*/
 	BindQuery(key string, resultType string, result interface{}) error
 
 	/*
-	http headerからパラメータを取り出す
+		http headerからパラメータを取り出す
 	*/
 	BindHeader(key string, resultType string, result interface{}) error
 
 	/*
-	FORM形式でリクエストされたデータからパラメータを取り出す
+		FORM形式でリクエストされたデータからパラメータを取り出す
 	*/
 	BindForm(key string, resultType string, result interface{}) error
 
 	/*
-	Bodyからパラメータをパースする
+		Bodyからパラメータをパースする
 	*/
 	BindBody(resultType string, result interface{}) error
 }

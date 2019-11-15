@@ -1,8 +1,8 @@
 package swagger
 
 import (
-	"net/http"
 	"io"
+	"net/http"
 )
 
 // ProducerFunc represents a function that can be used as a producer

@@ -1,9 +1,9 @@
 package swagger
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
 	"github.com/eaglesakura/swagger-go-core"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func Test_MethodMapper_PutHandler(t *testing.T) {
@@ -11,25 +11,25 @@ func Test_MethodMapper_PutHandler(t *testing.T) {
 	assert.NotNil(t, mapper)
 
 	mapper.PutHandler(swagger.HandleRequest{
-		Path:"/api/v1/test",
-		Method:"GET",
+		Path:   "/api/v1/test",
+		Method: "GET",
 	})
 	mapper.PutHandler(swagger.HandleRequest{
-		Path:"/api/v1/test/{userId}",
-		Method:"GET",
+		Path:   "/api/v1/test/{userId}",
+		Method: "GET",
 	})
 	mapper.PutHandler(swagger.HandleRequest{
-		Path:"/api/v1/test/{userId}",
-		Method:"POST",
+		Path:   "/api/v1/test/{userId}",
+		Method: "POST",
 	})
 	mapper.PutHandler(swagger.HandleRequest{
-		Path:"/api/v1/debuggers",
-		Method:"GET",
+		Path:   "/api/v1/debuggers",
+		Method: "GET",
 	})
 
 	listMappers := mapper.ListMethodMappers()
 	assert.NotNil(t, listMappers)
-	assert.Equal(t, listMappers.Len(), 3)        // POST/GETで同じURLはマージされる
+	assert.Equal(t, listMappers.Len(), 3) // POST/GETで同じURLはマージされる
 
 	for _, value := range listMappers {
 		assert.NotNil(t, value)

@@ -76,13 +76,13 @@ func stringToValue(value string, resultType string, result interface{}) error {
 			if ptr, ok := result.(**float32); ok {
 				temp := float32(value)
 				*ptr = &temp
-				return nil;
+				return nil
 			}
 		case "float64":
 			if ptr, ok := result.(**float64); ok {
 				temp := float64(value)
 				*ptr = &temp
-				return nil;
+				return nil
 			}
 		}
 	case "bool":

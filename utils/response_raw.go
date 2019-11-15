@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"net/http"
 	"github.com/eaglesakura/swagger-go-core"
+	"net/http"
 )
 
 /*

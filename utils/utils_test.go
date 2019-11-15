@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestAddPath(t *testing.T) {
@@ -18,7 +18,7 @@ type testStruct struct {
 	StringValue string
 }
 
-func (it testStruct)String() string {
+func (it testStruct) String() string {
 	buf, _ := json.Marshal(it)
 	return string(buf)
 }
@@ -43,8 +43,8 @@ func TestParameterToString_primitive(t *testing.T) {
 
 func TestParameterToString_struct(t *testing.T) {
 	temp := testStruct{
-		StringValue:"test",
-		IntValue:100,
+		StringValue: "test",
+		IntValue:    100,
 	}
 
 	assert.Equal(t, ParameterToString(&temp), `{"IntValue":100,"StringValue":"test"}`)
@@ -52,8 +52,8 @@ func TestParameterToString_struct(t *testing.T) {
 
 func TestParameterToString_struct_array(t *testing.T) {
 	temp := testStruct{
-		StringValue:"test",
-		IntValue:100,
+		StringValue: "test",
+		IntValue:    100,
 	}
 
 	tempArray := []testStruct{temp}

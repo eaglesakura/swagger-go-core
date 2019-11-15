@@ -1,13 +1,13 @@
 package swagger
 
 import (
-	"regexp"
 	"github.com/eaglesakura/swagger-go-core"
+	"regexp"
 )
 
 type ParameterValidatorImpl struct {
-	Value       interface{}
-	IsNil       bool
+	Value interface{}
+	IsNil bool
 
 	pattern     *regexp.Regexp
 	enumPattern *[]string
@@ -17,16 +17,16 @@ type ParameterValidatorImpl struct {
 }
 
 func NewValidator(value interface{}, isNil bool) swagger.ParameterValidator {
-	return &ParameterValidatorImpl{Value:value, IsNil:isNil}
+	return &ParameterValidatorImpl{Value: value, IsNil: isNil}
 }
 
-func (it *ParameterValidatorImpl)Required(set bool) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl) Required(set bool) swagger.ParameterValidator {
 	it.required = &set
 	return it
 }
 
-func (it *ParameterValidatorImpl)Pattern(pattern string) swagger.ParameterValidator {
-	pattern = (pattern[1:len(pattern) - 2])
+func (it *ParameterValidatorImpl) Pattern(pattern string) swagger.ParameterValidator {
+	pattern = (pattern[1 : len(pattern)-2])
 
 	exp, err := regexp.Compile(pattern)
 	if err != nil {
@@ -35,12 +35,12 @@ func (it *ParameterValidatorImpl)Pattern(pattern string) swagger.ParameterValida
 	return it
 }
 
-func (it *ParameterValidatorImpl)MinLength(len int) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl) MinLength(len int) swagger.ParameterValidator {
 	it.minLength = &len
 	return it
 }
 
-func (it *ParameterValidatorImpl)MaxLength(len int) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl) MaxLength(len int) swagger.ParameterValidator {
 	it.maxLength = &len
 	return it
 }
@@ -48,12 +48,12 @@ func (it *ParameterValidatorImpl)MaxLength(len int) swagger.ParameterValidator {
 /*
 valuesに指定したいずれかの値に合致する必要がある
 */
-func (it *ParameterValidatorImpl)EnumPattern(values []string) swagger.ParameterValidator {
+func (it *ParameterValidatorImpl) EnumPattern(values []string) swagger.ParameterValidator {
 	it.enumPattern = &values
 	return it
 }
 
-func (it *ParameterValidatorImpl)Valid(factory swagger.ValidatorFactory) bool {
+func (it *ParameterValidatorImpl) Valid(factory swagger.ValidatorFactory) bool {
 
 	if it.IsNil {
 		// nilチェック

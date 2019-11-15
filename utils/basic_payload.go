@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"io"
 	"bytes"
-	"github.com/eaglesakura/swagger-go-core"
-	"net/url"
 	"encoding/json"
+	"github.com/eaglesakura/swagger-go-core"
+	"io"
+	"net/url"
 )
 
 /*

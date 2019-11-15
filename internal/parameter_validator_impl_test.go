@@ -1,9 +1,9 @@
 package swagger
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
 	"github.com/eaglesakura/swagger-go-core/swag"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func Test_ValidatorImpl_Valid(t *testing.T) {
