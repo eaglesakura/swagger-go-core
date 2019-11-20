@@ -112,7 +112,11 @@ func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
 	}
 
 	// decode json
-	return json.Unmarshal(buf, resultPtr)
+	if resultPtr != nil {
+		return json.Unmarshal(buf, resultPtr)
+	} else {
+		return nil
+	}
 }
 
 func (it *BasicFetchClient) Fetch(resultPtr interface{}) error {
