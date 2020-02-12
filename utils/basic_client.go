@@ -37,9 +37,21 @@ type BasicFetchClient struct {
 	*/
 	CustomFetch FetchFunction
 
-	apiPath string
-	queries url.Values
-	payload swagger.DataPayload
+	ApiPath string
+
+	Queries url.Values
+
+	Payload swagger.DataPayload
+
+	/*
+		Raw Response.
+	*/
+	Response *http.Response
+
+	/*
+		Raw Response Body.
+	*/
+	ResponseBody []byte
 }
 
 /*
@@ -55,7 +67,7 @@ func NewFetchClient(endpoint string, client *http.Client) *BasicFetchClient {
 		Request:     req,
 		Endpoint:    endpoint,
 		CustomFetch: basicFetchFunction,
-		queries:     url.Values{},
+		Queries:     url.Values{},
 	}
 }
 
@@ -64,7 +76,7 @@ func (it *BasicFetchClient) NewValidator(value interface{}, isNil bool) swagger.
 }
 
 func (it *BasicFetchClient) SetApiPath(path string) {
-	it.apiPath = path
+	it.ApiPath = path
 }
 
 func (it *BasicFetchClient) SetMethod(method string) {
@@ -72,7 +84,7 @@ func (it *BasicFetchClient) SetMethod(method string) {
 }
 
 func (it *BasicFetchClient) AddQueryParam(key string, value string) {
-	it.queries.Add(key, url.QueryEscape(value))
+	it.Queries.Add(key, url.QueryEscape(value))
 }
 
 func (it *BasicFetchClient) AddHeader(key string, value string) {
@@ -80,21 +92,22 @@ func (it *BasicFetchClient) AddHeader(key string, value string) {
 }
 
 func (it *BasicFetchClient) SetPayload(payload swagger.DataPayload) {
-	it.payload = payload
+	it.Payload = payload
 }
 
 func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
-	// request payload
-	if it.payload != nil {
-		it.Request.Header.Set("Content-Type", it.payload.GetContentType())
-		it.Request.Header.Set("Content-Length", fmt.Sprintf("%v", it.payload.GetContentLength()))
-		it.Request.Body = it.payload.OpenStream()
-		defer it.Request.Body.Close()
+	// request Payload
+	if it.Payload != nil {
+		it.Request.Header.Set("Content-Type", it.Payload.GetContentType())
+		it.Request.Header.Set("Content-Length", fmt.Sprintf("%v", it.Payload.GetContentLength()))
+		it.Request.Body = it.Payload.OpenStream()
+		defer func() { _ = it.Request.Body.Close() }()
 	}
 
 	resp, err := it.Client.Do(it.Request)
+	it.Response = resp
 	if resp != nil && resp.Body != nil {
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 	}
 
 	if err != nil {
@@ -105,9 +118,10 @@ func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
 	if err != nil {
 		return err
 	}
+	it.ResponseBody = buf
 
 	if (resp.StatusCode / 100) != 2 {
-		// statuscode error
+		// status code error
 		return errors.New(int32(resp.StatusCode), "FetchError[%v]%v]: code='%v' / body=%v", it.Request.Method, it.Request.URL.Path, resp.StatusCode, string(buf))
 	}
 
@@ -122,12 +136,12 @@ func basicFetchFunction(it *BasicFetchClient, resultPtr interface{}) error {
 func (it *BasicFetchClient) Fetch(resultPtr interface{}) error {
 	// build url
 	{
-		reqUrl, err := url.Parse(AddPath(it.Endpoint, it.apiPath))
+		reqUrl, err := url.Parse(AddPath(it.Endpoint, it.ApiPath))
 		if err != nil {
 			return err
 		}
-		if len(it.queries) > 0 {
-			reqUrl.RawQuery = it.queries.Encode()
+		if len(it.Queries) > 0 {
+			reqUrl.RawQuery = it.Queries.Encode()
 		}
 
 		it.Request.URL = reqUrl
